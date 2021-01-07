@@ -20,8 +20,7 @@ public class Store extends Thread {
     private boolean isFinish=false;
     private List<People> peoples=new ArrayList<>();
     private List<Product> products=new ArrayList<>();
-
-    private Map<String,String> res=new HashMap<>();
+    private WatchLocker watchLocker=null;
 
     public void setProducts(Product pro){
 
@@ -37,7 +36,6 @@ public class Store extends Thread {
         synchronized (this){
             if(this.peoples.size()>0){
                 int index=(int)(Math.random()*(this.peoples.size()-1));
-                //System.out.print(index);
                 return this.peoples.remove(index);
             }
         }
@@ -53,11 +51,10 @@ public class Store extends Thread {
         synchronized (SELL_LOCK){
             if(this.products.size()>0){
                 Product pro = this.products.remove(0);
-                //System.out.print(getName()+" ");
                 peo.start();
                 peo.setProduct(pro);
-                res.put(peo.getName(),pro.getName());
-                //System.out.println();
+                Map<String, String> mapInfo = this.watchLocker.getMapInfo();
+                mapInfo.put(peo.getName(),pro.getName());
             }
         }
     }
@@ -86,13 +83,11 @@ public class Store extends Thread {
                 if(this.peoples.size()<=0){
                     isFinish=true;
                     STOP_SINGLE++;
-                    //System.out.println("========================================="+getName()+"  "+this.products.size());
                     break;
                 }
                 if(this.products.size()<=0){
                     isFinish=true;
                     STOP_SINGLE++;
-                    //System.out.println("========================================="+getName()+"  "+this.products.size());
                     break;
                 }
             }
@@ -105,30 +100,19 @@ public class Store extends Thread {
                 Store.FINISH_SIGNAL.notify();
             }
         }
-
-
-       /* synchronized (MainMsg.singleLock){
-            try {
-                Store.FINISH_STORE++;
-                MainMsg.singleLock.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }*/
-        //System.out.println(getName()+"   sell finish...");
-
-        //show();
     }
 
 
     public void show(){
-        for (Map.Entry<String,String> entry:res.entrySet()){
+        Map<String, String> mapInfo = this.watchLocker.getMapInfo();
+        for (Map.Entry<String,String> entry:mapInfo.entrySet()){
             System.out.println(entry.getKey()+"<----->"+entry.getValue());
         }
     }
 
 
-    public Store(int storeNum) {
+    public Store(int storeNum,WatchLocker watchLocker) {
+        this.watchLocker=watchLocker;
         this.storeName="store_"+id++;
         this.storeNum=storeNum;
         setName(storeName);

@@ -1,10 +1,26 @@
 package com.dudu.ms;
 
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+
 public class WatchLocker {
     int status=0;
     long start;
     long end;
     long res;
+
+    private Map<String,String> mapInfo=new Hashtable<>();
+
+
+    public Map<String, String> getMapInfo() {
+        return mapInfo;
+    }
+
+    public void setMapInfo(String key,String value) {
+        this.mapInfo.put(key,value);
+    }
+
     public WatchLocker(int status) {
         this.status = status;
     }

@@ -9,32 +9,25 @@ public class MainMsg {
 
     public static final String PEOPLE_LOCK="";
     public static final String STORE_LOCK="";
-
     public static final  String singleLock="";
+
 
     private int peoNum[];
     private int proNum[];
     private int storeNum;
 
 
+    private List<Store> stores=null;
 
 
-    public static void menu(){
-        System.out.println("init ...");
-        Scanner sc=new Scanner(System.in);
-        System.out.print("config people num:");
-        final int peoNum =sc.nextInt();
+
+    public static void menu(final WatchLocker watchLocker,MainMsg mainMsg){
+        int storeNum=mainMsg.storeNum;
+        int peoNum=mainMsg.peoNum.length;
+        int proNum= mainMsg.proNum.length;
         System.out.println();
-        System.out.print("config product num:");
-        final int proNum = sc.nextInt();
-        System.out.println();
-        System.out.print("config store num:");
-        final int storeNum = sc.nextInt();
-        System.out.println();
-        MainMsg mainMsg=new MainMsg(peoNum,proNum,storeNum);
         mainMsg.config();
-        mainMsg.init();
-        final WatchLocker watchLocker=new WatchLocker(0);
+        mainMsg.init(watchLocker);
         Thread single=null;
         while(true){
             if(!Store.IS_BEGIN){
@@ -70,10 +63,10 @@ public class MainMsg {
                     });
                     single.start();
                 }
-                int i = sc.nextInt();
+               /* int i = 1;
                 if(i!=1){
                     continue;
-                }
+                }*/
                 Date date=new Date();
                 long beginTime= date.getTime();
                 watchLocker.setStart(beginTime);
@@ -90,7 +83,7 @@ public class MainMsg {
     }
 
 
-    public  void init(){
+    public  void init(WatchLocker watchLocker){
         if(proNum.length<=0){
             return;
         }
@@ -101,9 +94,9 @@ public class MainMsg {
             return;
         }
 
-        List<Store> stores=new ArrayList<>();
+        stores=new ArrayList<>();
         for (int i=0;i<storeNum;i++){
-            Store store = new Store(storeNum);
+            Store store = new Store(storeNum,watchLocker);
             for (int j=0;j<peoNum[i];j++){
                 store.setPeoples(new People("people"));
             }
@@ -113,6 +106,10 @@ public class MainMsg {
             store.start();
             stores.add(store);
         }
+    }
+
+    public List<Store> getStores() {
+        return stores;
     }
 
     public MainMsg(int peoNum, int proNum, int storeNum) {
@@ -143,7 +140,9 @@ public class MainMsg {
     }
 
     public static void main(String[] args) {
-        menu();
+        WatchLocker wl=new WatchLocker(0);
+        MainMsg msg=new MainMsg(1000,1000,10);
+        MainMsg.menu(wl,msg);
     }
 
 }
