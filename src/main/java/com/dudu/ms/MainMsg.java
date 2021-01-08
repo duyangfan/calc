@@ -32,7 +32,7 @@ public class MainMsg {
         while(true){
             if(!Store.IS_BEGIN){
                 System.out.println("is beginning? 1 OK ");
-                if(single==null){
+                if(true){
                     single=new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -62,6 +62,7 @@ public class MainMsg {
                         }
                     });
                     single.start();
+
                 }
                /* int i = 1;
                 if(i!=1){
@@ -80,6 +81,7 @@ public class MainMsg {
             }
             break;
         }
+        //Store.IS_BEGIN=false;
     }
 
 

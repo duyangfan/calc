@@ -17,7 +17,7 @@ public class CoreController {
 
 
     @RequestMapping("begin")
-    public ResultVo<Map<String,String>> begin(int peo, int pro, int store){
+    public void begin(int peo, int pro, int store){
         WatchLocker wl=new WatchLocker(0);
         MainMsg msg=new MainMsg(peo,pro,store);
         Thread t1=new Thread(new Runnable() {
@@ -26,9 +26,9 @@ public class CoreController {
                 MainMsg.menu(wl,msg);
             }
         });
-
+        Store.IS_BEGIN=false;
         t1.start();
-        try {
+        /*try {
             t1.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -36,7 +36,7 @@ public class CoreController {
         List<Store> stores = msg.getStores();
         ResultVo<Map<String,String>> resultVo=null;
         if(stores==null||stores.size()<=0){
-            return resultVo=new ResultVo<>(201,"运行失败",null);
+            //return resultVo=new ResultVo<>(201,"运行失败",null);
         }
         Map<String, String> mapInfo = wl.getMapInfo();
         int min=peo;
@@ -49,7 +49,7 @@ public class CoreController {
             }
         }
         resultVo=new ResultVo<>(200,"OK",mapInfo);
-        return resultVo;
+        //return resultVo;*/
     }
 
 }
