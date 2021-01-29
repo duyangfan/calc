@@ -2,7 +2,7 @@ package com.dudu.ms;
 
 public class Product {
 
-    private static int id=1 ;
+    public  static int id=1 ;
 
     private String name;
 

@@ -2,7 +2,7 @@ package com.dudu.ms;
 
 public class People extends Thread {
 
-    private  static  int id=1;
+    public  static  int id=1;
 
 
 
@@ -19,13 +19,9 @@ public class People extends Thread {
         setName(this.peoName);
     }
 
-
-
-
     public void setProduct(Product product) {
         this.product = product;
         sellNum++;
-        //System.out.println(getName()+" sell productNum is  "+product.getName()+" sell num is  "+sellNum);
         isGet=true;
     }
 
@@ -36,7 +32,6 @@ public class People extends Thread {
             if(!Store.IS_BEGIN){
                 synchronized (MainMsg.PEOPLE_LOCK){
                     try {
-
                         MainMsg.PEOPLE_LOCK.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -49,16 +44,15 @@ public class People extends Thread {
                 e.printStackTrace();
             }
             if(isGet){
-                //System.out.println(this.peoName+" get "+ this.product.getName());
+                System.out.println(this.peoName+" get "+ this.product.getName());
                break;
             }
             if(Store.IS_FINISH){
-                //System.out.println(this.peoName+" no ...... ");
+                System.out.println(this.peoName+" no ...... ");
                 break;
             }
-
         }
-        //System.out.println(this.getName()+" quit 。。");
+        System.out.println(this.getName()+" quit 。。");
     }
 
 

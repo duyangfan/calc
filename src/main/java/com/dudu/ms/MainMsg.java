@@ -3,7 +3,6 @@ package com.dudu.ms;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 
 public class MainMsg {
 
@@ -19,8 +18,6 @@ public class MainMsg {
 
     private List<Store> stores=null;
 
-
-
     public static void menu(final WatchLocker watchLocker,MainMsg mainMsg){
         int storeNum=mainMsg.storeNum;
         int peoNum=mainMsg.peoNum.length;
@@ -31,45 +28,39 @@ public class MainMsg {
         Thread single=null;
         while(true){
             if(!Store.IS_BEGIN){
-                System.out.println("is beginning? 1 OK ");
                 if(true){
                     single=new Thread(new Runnable() {
                         @Override
                         public void run() {
                             synchronized (Store.FINISH_SIGNAL){
                                 try {
-                                    System.out.println("mainMSG wait");
                                     Store.FINISH_SIGNAL.wait();
-
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
                             }
+                            /**
+                             *
+                             *
+                             *
+                             * */
                             while(Store.STOP_SINGLE<storeNum){
                                 synchronized (singleLock){
                                     singleLock.notifyAll();
                                 }
+
                             }
-                            System.out.println("Stop_Single"+Store.STOP_SINGLE);
                             long endTime= new Date().getTime();
                             watchLocker.setEnd(endTime);
-
-                            System.out.println("single thread is finished ...");
-                            System.out.println("耗时："+watchLocker.getTmes()+"ms");
-                            System.out.println("sell product is "+People.sellNum);
-                            System.out.println("productNum : "+ proNum+"  peopleNum :"+peoNum+"  storeNum : "+storeNum);
-
+                            System.out.println("耗时："+watchLocker.getTmes()+"ms   "+"productNum : "+ proNum+"  peopleNum :"+peoNum+"  storeNum : "+storeNum);
+                            Store.id=1;People.id=1;Product.id=1;
                         }
                     });
                     single.start();
-
                 }
-               /* int i = 1;
-                if(i!=1){
-                    continue;
-                }*/
                 Date date=new Date();
                 long beginTime= date.getTime();
+
                 watchLocker.setStart(beginTime);
                 Store.IS_BEGIN=true;
                 synchronized (PEOPLE_LOCK){
@@ -81,7 +72,6 @@ public class MainMsg {
             }
             break;
         }
-        //Store.IS_BEGIN=false;
     }
 
 

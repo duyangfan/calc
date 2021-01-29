@@ -13,7 +13,7 @@ public class Store extends Thread {
     public static int STOP_SINGLE=0;
     public static String FINISH_SIGNAL="";
 
-    private static int id=1;
+    public static int id=1;
     private String storeName;
     private int storeNum=0;
 
