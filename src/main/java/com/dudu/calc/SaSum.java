@@ -38,6 +38,7 @@ public class SaSum {
         writeFile("total :"+(t+res[2]),fos);
 
         close(fos);
+
     }
 
 
